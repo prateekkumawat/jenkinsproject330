@@ -26,8 +26,15 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockercreds', usernameVariable: 'docker_user', passwordVariable: 'docker_pass')]) {
                    sh "docker tag static ${env.docker_user}/static:${BUILD_NUMBER}"
                    sh "docker login -u ${env.docker_user} -p ${env.docker_pass}"
-                   sh "docker push ${env.docker_user}/static:${BUILD_NUMBER}"
+                   sh "docker push ${env.docker_user}/static:${BUILD_NUMBER}"  
                 }
+            }
+        }
+
+        stage("Image Cleanup"){
+            steps {
+                   sh "docker image rm -f ${env.docker_user}/static:${BUILD_NUMBER}"
+                   sh "docker image rm -f static:latest"
             }
         }
     }
