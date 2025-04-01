@@ -1,0 +1,29 @@
+pipeline {
+    agent {
+        label "devops"
+    }
+
+    stages{
+        stage("Code Checkout"){
+          steps{ 
+            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "main"
+          }
+        }
+
+        stage("build Docker Image") { 
+            steps { 
+                sh "docker build -t static ."
+            }
+        }
+
+        stage("Image Push"){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'dockercreds', usernameVariable: 'docker_user', passwordVariable: 'docker_pass')]) {
+                   sh "docker tag static ${env.docker_user}/static:${BUILDNUMBER}"
+                   sh "docker login -u ${env.docker_user} -p ${env.docker_pass}"
+                   sh "docker push ${env.docker_user}/static:${BUILDNUMBER}"
+                }
+            }
+        }
+    }
+}
