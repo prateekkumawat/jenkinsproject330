@@ -17,7 +17,7 @@ pipeline {
 
         stage("build Docker Image") { 
             steps { 
-                sh "docker build -t static ."
+                sh "docker build --no-cache -t static ."
             }
         }
 
