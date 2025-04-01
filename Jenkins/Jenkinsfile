@@ -19,9 +19,9 @@ pipeline {
         stage("Image Push"){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockercreds', usernameVariable: 'docker_user', passwordVariable: 'docker_pass')]) {
-                   sh "docker tag static ${env.docker_user}/static:${BUILDNUMBER}"
+                   sh "docker tag static ${env.docker_user}/static:${BUILD_NUMBER}"
                    sh "docker login -u ${env.docker_user} -p ${env.docker_pass}"
-                   sh "docker push ${env.docker_user}/static:${BUILDNUMBER}"
+                   sh "docker push ${env.docker_user}/static:${BUILD_NUMBER}"
                 }
             }
         }
