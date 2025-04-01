@@ -33,8 +33,10 @@ pipeline {
 
         stage("Image Cleanup"){
             steps {
+                withCredentials([usernamePassword(credentialsId: 'dockercreds', usernameVariable: 'docker_user', passwordVariable: 'docker_pass')]) {
                    sh "docker image rm -f ${env.docker_user}/static:${BUILD_NUMBER}"
                    sh "docker image rm -f static:latest"
+                }   
             }
         }
     }
