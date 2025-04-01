@@ -4,6 +4,11 @@ pipeline {
     }
 
     stages{
+        stage("Clean Workspace") { 
+            steps {
+                cleanWs()
+            }
+        }
         stage("Code Checkout"){
           steps{ 
             git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "main"
