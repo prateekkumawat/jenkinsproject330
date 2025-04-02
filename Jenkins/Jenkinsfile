@@ -43,6 +43,7 @@ pipeline {
         stage("agent Deployment"){
             environment {
                 SSH_CREDS = credentials('deploymentagent')
+            }
             steps{
                 //withCredentials([sshUserPrivateKey(credentialsId: 'deploymentagent', variable: 'SSH_CREDENTIALS')]){
                   sh "ssh -i $SSH_CREDS $SSH_CREDS_USR@172.31.18.162 'docker ps'"   
