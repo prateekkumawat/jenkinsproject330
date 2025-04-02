@@ -39,5 +39,13 @@ pipeline {
                 }   
             }
         }
+
+        stage("agent Deployment"){
+            steps{
+                withCredentials([sshUserPrivateKey(credentialsId: 'deploymentagent', variable: 'SSH_CREDENTIALS')]){
+                    sh "ssh -i $(SSH_CREDENTIALS.privatekey) ${SSH_CREDENTIALS.user}@172.31.18.162 'docker ps'"   
+                }
+            }    
+        }
     }
 }
