@@ -2,7 +2,9 @@ pipeline {
     agent {
         label "devops"
     }
-
+    environment  {
+        SCANNER_HOME=tool 'sonar-scanner'
+    }
     stages{
         stage("Clean Workspace") { 
             steps {
@@ -13,6 +15,25 @@ pipeline {
           steps{ 
             git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "main"
           }
+        }
+        
+        stage('Sonarqube Analysis') {
+            steps {
+                dir('src/') {
+                    withSonarQubeEnv('sonar-server') {
+                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=docker-image-push-pipeline \
+                        -Dsonar.projectKey=docker-image-push-pipeline '''
+                    }
+                }
+            }
+        }
+        stage('QualityGate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+                }
+            }
         }
 
         stage("build Docker Image") { 
@@ -40,16 +61,16 @@ pipeline {
             }
         }
 
-        stage("agent Deployment"){
-            environment {
-                SSH_CREDS = credentials('deploymentagent')
-            }
-            steps{
-                //withCredentials([sshUserPrivateKey(credentialsId: 'deploymentagent', variable: 'SSH_CREDENTIALS')]){
-                  sh "ssh -o StrictHostKeyChecking=no -i $SSH_CREDS $SSH_CREDS_USR@172.31.18.162 'docker run -dit --name test -p 80:80 prateekkumawat/static:${BUILD_NUMBER}'"   
-                //}
+        // stage("agent Deployment"){
+        //     environment {
+        //         SSH_CREDS = credentials('deploymentagent')
+        //     }
+        //     steps{
+        //         //withCredentials([sshUserPrivateKey(credentialsId: 'deploymentagent', variable: 'SSH_CREDENTIALS')]){
+        //         //  sh "ssh -o StrictHostKeyChecking=no -i $SSH_CREDS $SSH_CREDS_USR@172.31.18.162 'docker run -dit --name test -p 80:80 prateekkumawat/static:${BUILD_NUMBER}'"   
+        //         //}
 
-            }    
-        }
+        //     }    
+        // }
     }
 }
