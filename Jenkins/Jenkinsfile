@@ -35,10 +35,23 @@ pipeline {
                 }
             }
         }
+         stage('Trivy FScan') {
+            steps {
+                dir('src/') {
+                    sh 'trivy fs . > /home/ubuntu/trivyfs.txt'
+                }
+            }
+        }
 
         stage("build Docker Image") { 
             steps { 
                 sh "docker build --no-cache -t static ."
+            }
+        }
+
+        stage("Trivy ImageScan") {
+            steps {
+                sh 'trivy image static:latest > /home/ubuntu/trivyimage_report.txt' 
             }
         }
 
