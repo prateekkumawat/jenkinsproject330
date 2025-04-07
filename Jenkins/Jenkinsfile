@@ -45,7 +45,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage("Npm Build ") {
             steps {
                 dir ('src/') {
@@ -55,6 +55,14 @@ pipeline {
             }
         }
 
+        stage("DeployCode S3") {
+            steps {
+                dir ('src/dist/') {
+                   sh 'aws s3 sync . s3://test-hsit-123/ '
+               } 
+            }
+        }
+        
         // stage("agent Deployment"){
         //     environment {
         //         SSH_CREDS = credentials('deploymentagent')
