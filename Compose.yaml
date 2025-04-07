@@ -1,7 +1,0 @@
-services:
-  webserver:
-    containername: webserver
-    image: prateekkumawat/strict:14
-    ports: 
-      - 80:80 
-     

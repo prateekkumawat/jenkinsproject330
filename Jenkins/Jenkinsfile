@@ -2,6 +2,9 @@ pipeline {
     agent {
         label "devops"
     }
+    tools {
+        nodejs 'nodejs'
+    }
     environment  {
         SCANNER_HOME=tool 'sonar-scanner'
     }
@@ -13,7 +16,7 @@ pipeline {
         }
         stage("Code Checkout"){
           steps{ 
-            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "main"
+            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "noderelease"
           }
         }
         
@@ -22,8 +25,8 @@ pipeline {
                 dir('src/') {
                     withSonarQubeEnv('sonar-server') {
                         sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=docker-image-push-pipeline \
-                        -Dsonar.projectKey=docker-image-push-pipeline '''
+                        -Dsonar.projectName=node-project-pipeline \
+                        -Dsonar.projectKey=node-project-pipeline '''
                     }
                 }
             }
@@ -31,7 +34,7 @@ pipeline {
         stage('QualityGate') {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+                    waitForQualityGate abortPipeline: false, credentialsId: 'npm-project-sonar-token' 
                 }
             }
         }
@@ -42,35 +45,13 @@ pipeline {
                 }
             }
         }
-
-        stage("build Docker Image") { 
-            steps { 
-                sh "docker build --no-cache -t static ."
-            }
-        }
-
-        stage("Trivy ImageScan") {
+        
+        stage("Npm Build ") {
             steps {
-                sh 'trivy image static:latest > /home/ubuntu/trivyimage_report.txt' 
-            }
-        }
-
-        stage("Image Push"){
-            steps{
-                withCredentials([usernamePassword(credentialsId: 'dockercreds', usernameVariable: 'docker_user', passwordVariable: 'docker_pass')]) {
-                   sh "docker tag static ${env.docker_user}/static:${BUILD_NUMBER}"
-                   sh "docker login -u ${env.docker_user} -p ${env.docker_pass}"
-                   sh "docker push ${env.docker_user}/static:${BUILD_NUMBER}"  
-                }
-            }
-        }
-
-        stage("Image Cleanup"){
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockercreds', usernameVariable: 'docker_user', passwordVariable: 'docker_pass')]) {
-                   sh "docker image rm -f ${env.docker_user}/static:${BUILD_NUMBER}"
-                   sh "docker image rm -f static:latest"
-                }   
+                dir ('src/') {
+                    sh 'npm ci'
+                    sh 'npm run build'
+               } 
             }
         }
 
