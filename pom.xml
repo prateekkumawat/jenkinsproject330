@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+
+<groupId>mynx.myca500</groupId>
+<artifactId>myca-commons</artifactId>
+<version>1.1</version>
+<name>myca-commons</name>
+<description>Myca500 common libaraies</description>
+
+<distributionManagement>
+    <repository>
+        <id>nexus-releases</id>
+        <url>http://18.61.183.118:8081/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>
+        <id>nexus-snapshots</id>
+        <url>http://18.61.183.118:8081/repository/maven-snapshots/</url>
+    </snapshotRepository>
+</distributionManagement>
+
+<properties>
+    <java.version>17</java.version>
+</properties>
+
+<dependencies>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.26</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>2.1.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.xhtmlrenderer</groupId>
+        <artifactId>flying-saucer-pdf</artifactId>
+        <version>9.8.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>5.8.0</version>
+        <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>42.6.2</version>
+        <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version> 10.14.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.modelmapper</groupId>
+        <artifactId>modelmapper</artifactId>
+        <version>3.2.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.twilio.sdk</groupId>
+        <artifactId>twilio</artifactId>
+        <version>9.9.1</version>
+    </dependency>
+
+</dependencies>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version> <!-- Use an appropriate version -->
+            <configuration>
+                <source>17</source> <!-- Replace with your desired Java version -->
+                <target>17</target> <!-- Replace with your desired Java version -->
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+</project>

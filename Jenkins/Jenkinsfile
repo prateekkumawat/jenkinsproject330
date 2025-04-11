@@ -3,10 +3,7 @@ pipeline {
         label "devops"
     }
     tools {
-        nodejs 'nodejs'
-    }
-    environment  {
-        SCANNER_HOME=tool 'sonar-scanner'
+        mvn 'mvn'
     }
     stages{
         stage("Clean Workspace") { 
@@ -16,63 +13,29 @@ pipeline {
         }
         stage("Code Checkout"){
           steps{ 
-            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "noderelease"
+            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "nexus"
           }
         }
         
-        stage('Sonarqube Analysis') {
-            steps {
-                dir('src/') {
-                    withSonarQubeEnv('sonar-server') {
-                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=node-project-pipeline \
-                        -Dsonar.projectKey=node-project-pipeline '''
-                    }
-                }
+        stage("Maven package build"){
+            steps{
+                sh 'mvn clean package'
             }
         }
-        stage('QualityGate') {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'npm-project-sonar-token' 
-                }
-            }
-        }
-         stage('Trivy FScan') {
-            steps {
-                dir('src/') {
-                    sh 'trivy fs . > /home/ubuntu/trivyfs.txt'
-                }
+     
+       stage("Artifacts Upload"){
+            steps{
+                nexusArtifactUploader {
+                    credentialsId: 'nexuscreds',
+                    [artifactId: 
+                    projectName,
+                    classifier: '',
+                    file: 'myca-common' + version + '.jar',
+                    type: 'jar']
+                }    
             }
         }
 
-        stage("Npm Build ") {
-            steps {
-                dir ('src/') {
-                    sh 'npm ci'
-                    sh 'npm run build'
-               } 
-            }
-        }
-
-        stage("DeployCode S3") {
-            steps {
-                dir ('src/dist/') {
-                   sh 'aws s3 sync . s3://test-hsit-123/ '
-               } 
-            }
-        }
         
-        // stage("agent Deployment"){
-        //     environment {
-        //         SSH_CREDS = credentials('deploymentagent')
-        //     }
-        //     steps{
-        //         //withCredentials([sshUserPrivateKey(credentialsId: 'deploymentagent', variable: 'SSH_CREDENTIALS')]){
-        //         //  sh "ssh -o StrictHostKeyChecking=no -i $SSH_CREDS $SSH_CREDS_USR@172.31.18.162 'docker run -dit --name test -p 80:80 prateekkumawat/static:${BUILD_NUMBER}'"   
-        //         //}
-
-        //     }    
-        // }
     }
 }
