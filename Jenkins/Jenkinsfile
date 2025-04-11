@@ -25,7 +25,7 @@ pipeline {
      
        stage("Artifacts Upload"){
             steps{
-                nexusArtifactUploader {
+                nexusArtifactUploader (
                     credentialsId: 'nexuscreds',
                     artifacts: [
                         [artifactId: myca-commons,
@@ -33,7 +33,7 @@ pipeline {
                         file: 'myca-common' + version + '.jar',
                         type: 'jar']
                     ]    
-                }    
+                )    
             }
         }
 
