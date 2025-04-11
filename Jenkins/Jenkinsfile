@@ -27,11 +27,12 @@ pipeline {
             steps{
                 nexusArtifactUploader {
                     credentialsId: 'nexuscreds',
-                    [artifactId: 
-                    projectName,
-                    classifier: '',
-                    file: 'myca-common' + version + '.jar',
-                    type: 'jar']
+                    artifacts: [
+                        [artifactId: myca-commons,
+                        classifier: '',
+                        file: 'myca-common' + version + '.jar',
+                        type: 'jar']
+                    ]    
                 }    
             }
         }
