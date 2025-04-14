@@ -36,7 +36,7 @@ pipeline {
                     artifacts: [
                         [artifactId: hobbie-backend,
                         classifier: '',
-                        file: 'hobbie-backend' + 0.0.1-SNAPSHOT + '.jar',
+                        file: 'hobbie-backend' + version + '.jar',
                         type: 'jar']
                     ]    
                 )    
