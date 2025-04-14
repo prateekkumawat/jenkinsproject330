@@ -13,7 +13,7 @@ pipeline {
         }
         stage("Code Checkout"){
           steps{ 
-            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "nexus"
+            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "nexus3"
           }
         }
         
@@ -29,14 +29,14 @@ pipeline {
                     nexusVersion: 'nexus3',
                     protocol: 'http',
                     nexusUrl: 'http://18.61.183.118:8081/repository/maven-releases/',
-                    groupId: 'mynx.myca500',
-                    version: 1.1,
+                    groupId: 'backend.hobbiebackend',
+                    version: 2.4.2,
                     repository: 'nexus-releases',
                     credentialsId: 'nexuscreds',
                     artifacts: [
-                        [artifactId: myca-commons,
+                        [artifactId: hobbie-backend,
                         classifier: '',
-                        file: 'myca-common' + version + '.jar',
+                        file: 'hobbie-backend' + 0.0.1-SNAPSHOT + '.jar',
                         type: 'jar']
                     ]    
                 )    
