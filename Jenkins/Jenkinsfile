@@ -3,7 +3,7 @@ pipeline {
         label "devops"
     }
     tools {
-        mvn 'mvn'
+        maven 'mvn'
     }
     stages{
         stage("Clean Workspace") { 
@@ -26,6 +26,12 @@ pipeline {
        stage("Artifacts Upload"){
             steps{
                 nexusArtifactUploader (
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: 'http://18.61.183.118:8081/repository/maven-releases/',
+                    groupId: 'mynx.myca500',
+                    version: 1.1,
+                    repository: 'nexus-releases',
                     credentialsId: 'nexuscreds',
                     artifacts: [
                         [artifactId: myca-commons,
