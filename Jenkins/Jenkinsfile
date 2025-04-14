@@ -30,7 +30,7 @@ pipeline {
                     protocol: 'http',
                     nexusUrl: 'http://18.61.183.118:8081/repository/maven-releases/',
                     groupId: 'backend.hobbiebackend',
-                    version: 2.4.2,
+                    version: 2.4,
                     repository: 'nexus-releases',
                     credentialsId: 'nexuscreds',
                     artifacts: [
