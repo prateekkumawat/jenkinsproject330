@@ -48,7 +48,7 @@ pipeline {
                         artifacts: [
                             [artifactId: 'mavencommends',
                             classifier: '',
-                            file: "target/mavencommands${version}.jar",
+                            file: "target/mavencommands-${version}.jar",
                             type: 'jar']
                         ]    
                     );
