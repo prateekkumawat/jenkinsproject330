@@ -21,28 +21,29 @@ pipeline {
             steps {
                 sh 'mvn clean package'
                 sh 'mvn install -f pom.xml'
+                sh 'mvn -s ./setting.xml package install'
             }
         }
      
-       stage("Artifacts Upload"){
-            steps{
-                nexusArtifactUploader (
-                    protocol: 'http',
-                    nexusVersion: 'nexus3',
-                    groupId: 'mavencommends'
-                    nexusUrl: 'http://18.61.183.118:8081',
-                    credentialsId: 'nexuscreds',
-                    version: '0.2.2-SNAPSHOT',
-                    repository: 'maven-releases'
-                    artifacts: [
-                        [artifactId: mavencommends,
-                        classifier: '',
-                        file: 'mavencommands' + version + '.jar',
-                        type: 'jar']
-                    ]    
-                )    
-            }
-        }
+    //    stage("Artifacts Upload"){
+    //         steps{
+    //             nexusArtifactUploader (
+    //                 protocol: 'http',
+    //                 nexusVersion: 'nexus3',
+    //                 groupId: 'mavencommends'
+    //                 nexusUrl: ('http://18.61.237.59:8081',
+    //                 credentialsId: 'nexuscreds',
+    //                 version: '0.2.2-SNAPSHOT',
+    //                 repository: 'maven-releases'
+    //                 artifacts: [
+    //                     [artifactId: mavencommends,
+    //                     classifier: '',
+    //                     file: 'mavencommands' + version + '.jar',
+    //                     type: 'jar']
+    //                 ]    
+    //             )    
+    //         }
+    //     }
 
         
     }
