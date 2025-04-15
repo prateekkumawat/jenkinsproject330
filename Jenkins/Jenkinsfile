@@ -36,7 +36,7 @@ pipeline {
                         protocol: 'http',
                         nexusVersion: 'nexus3',
                         groupId: 'mavencommends'
-                        nexusUrl: 'NEXUS_URL',
+                        nexusUrl: NEXUS_URL,
                         credentialsId: 'nexuscreds',
                         version: '0.2.2-SNAPSHOT',
                         repository: 'maven-releases'
