@@ -25,7 +25,6 @@ pipeline {
             steps {
                 sh 'mvn clean package'
                 sh 'mvn install -f pom.xml'
-                sh 'mvn -s ./settings.xml package install'
             }
         }
      
