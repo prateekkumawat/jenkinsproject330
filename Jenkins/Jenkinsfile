@@ -45,7 +45,7 @@ pipeline {
                         file: 'mavencommands' + version + '.jar',
                         type: 'jar']
                     ]    
-                )    
+                );    
             }
         }
 
