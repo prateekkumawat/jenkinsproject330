@@ -32,12 +32,12 @@ pipeline {
        stage("Artifacts Upload"){
             steps{
                 script { 
-                   # Trim version of jar from pom file
+                   // Trim version of jar from pom file
                    def version = sh(
                                    script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
                                    returnStdout: true
                                 ).trim()
-                                
+
                     nexusArtifactUploader(
                         protocol: 'http',
                         nexusVersion: 'nexus3',
