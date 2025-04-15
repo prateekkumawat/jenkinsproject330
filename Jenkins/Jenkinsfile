@@ -6,7 +6,7 @@ pipeline {
         maven 'mvn'
     }
     environment {
-        NEXUS_URL = "http://18.61.237.59:8081"
+        NEXUS_URL = "18.61.237.59:8081"
     }
 
     stages{
