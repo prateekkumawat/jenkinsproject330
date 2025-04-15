@@ -31,21 +31,23 @@ pipeline {
      
        stage("Artifacts Upload"){
             steps{
-                nexusArtifactUploader(
-                    protocol: 'http',
-                    nexusVersion: 'nexus3',
-                    groupId: 'mavencommends'
-                    nexusUrl: NEXUS_URL,
-                    credentialsId: 'nexuscreds',
-                    version: '0.2.2-SNAPSHOT',
-                    repository: 'maven-releases'
-                    artifacts: [
-                        [artifactId: mavencommends,
-                        classifier: '',
-                        file: 'mavencommands' + version + '.jar',
-                        type: 'jar']
-                    ]    
-                );    
+                script { 
+                    nexusArtifactUploader(
+                        protocol: 'http',
+                        nexusVersion: 'nexus3',
+                        groupId: 'mavencommends'
+                        nexusUrl: 'NEXUS_URL',
+                        credentialsId: 'nexuscreds',
+                        version: '0.2.2-SNAPSHOT',
+                        repository: 'maven-releases'
+                        artifacts: [
+                            [artifactId: mavencommends,
+                            classifier: '',
+                            file: 'mavencommands' + version + '.jar',
+                            type: 'jar']
+                        ]    
+                    );
+                }        
             }
         }
 
