@@ -44,7 +44,7 @@ pipeline {
                         nexusUrl: NEXUS_URL,
                         credentialsId: 'nexuscreds',
                         version: '0.2.2-SNAPSHOT',
-                        repository: 'maven-releases',
+                        repository: 'maven-snapshots',
                         artifacts: [
                             [artifactId: 'mavencommends',
                             classifier: '',
