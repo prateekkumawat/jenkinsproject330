@@ -28,8 +28,12 @@ pipeline {
             steps{
                 nexusArtifactUploader (
                     protocol: 'http',
+                    nexusVersion: 'nexus3',
+                    groupId: 'mavencommends'
                     nexusUrl: 'http://18.61.183.118:8081',
                     credentialsId: 'nexuscreds',
+                    version: '0.2.2-SNAPSHOT',
+                    repository: 'maven-releases'
                     artifacts: [
                         [artifactId: mavencommends,
                         classifier: '',
