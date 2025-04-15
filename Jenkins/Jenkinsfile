@@ -41,7 +41,7 @@ pipeline {
                         version: '0.2.2-SNAPSHOT',
                         repository: 'maven-releases',
                         artifacts: [
-                            [artifactId: mavencommends,
+                            [artifactId: 'mavencommends',
                             classifier: '',
                             file: 'mavencommands' + version + '.jar',
                             type: 'jar']
