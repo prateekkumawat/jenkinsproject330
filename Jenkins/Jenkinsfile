@@ -13,35 +13,37 @@ pipeline {
         }
         stage("Code Checkout"){
           steps{ 
-            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "nexus3"
+            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "artifacts"
           }
         }
         
         stage("Maven package build"){
-            steps{
+            steps {
                 sh 'mvn clean package'
+                sh 'mvn install -f pom.xml'
+                sh 'mvn package clean deploy '
             }
         }
      
-       stage("Artifacts Upload"){
-            steps{
-                nexusArtifactUploader (
-                    nexusVersion: 'nexus3',
-                    protocol: 'http',
-                    nexusUrl: 'http://18.61.183.118:8081/repository/maven-releases/',
-                    groupId: 'backend.hobbiebackend',
-                    version: 2.4,
-                    repository: 'nexus-releases',
-                    credentialsId: 'nexuscreds',
-                    artifacts: [
-                        [artifactId: hobbie-backend,
-                        classifier: '',
-                        file: 'hobbie-backend' + version + '.jar',
-                        type: 'jar']
-                    ]    
-                )    
-            }
-        }
+    //    stage("Artifacts Upload"){
+    //         steps{
+    //             nexusArtifactUploader (
+    //                 nexusVersion: 'nexus3',
+    //                 protocol: 'http',
+    //                 nexusUrl: 'http://18.61.183.118:8081/repository/maven-releases/',
+    //                 groupId: 'backend.hobbiebackend',
+    //                 version: 2.4,
+    //                 repository: 'nexus-releases',
+    //                 credentialsId: 'nexuscreds',
+    //                 artifacts: [
+    //                     [artifactId: hobbie-backend,
+    //                     classifier: '',
+    //                     file: 'hobbie-backend' + version + '.jar',
+    //                     type: 'jar']
+    //                 ]    
+    //             )    
+    //         }
+    //     }
 
         
     }
