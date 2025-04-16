@@ -7,6 +7,7 @@ pipeline {
     }
     environment {
         NEXUS_URL = "18.60.89.137:8081"
+        SCANNER_HOME=tool 'sonar-scanner'
     }
 
     stages{
@@ -19,6 +20,33 @@ pipeline {
           steps{ 
             git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "artifacts"
           }
+        }
+
+        stage('Sonarqube Analysis') {
+            steps {
+                dir('src/') {
+                    withSonarQubeEnv('sonar-server') {
+                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=node-nexus-artifacts-test \
+                        -Dsonar.projectKey=nexus-artifacts-test '''
+                    }
+                }
+            }
+        }
+        stage('QualityGate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'nexus-artifacts-test' 
+                }
+            }
+        }
+
+         stage('Trivy FScan') {
+            steps {
+                dir('src/') {
+                    sh 'trivy fs . > /home/ubuntu/trivyfs.txt'
+                }
+            }
         }
         
         stage("Maven package build"){
