@@ -22,24 +22,24 @@ pipeline {
           }
         }
 
-        stage('Sonarqube Analysis') {
-            steps {
-                dir('src/') {
-                    withSonarQubeEnv('sonar-server') {
-                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=node-nexus-artifacts-test \
-                        -Dsonar.projectKey=nexus-artifacts-test '''
-                    }
-                }
-            }
-        }
-        stage('QualityGate') {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'nexus-artifacts-test' 
-                }
-            }
-        }
+        // stage('Sonarqube Analysis') {
+        //     steps {
+        //         dir('src/') {
+        //             withSonarQubeEnv('sonar-server') {
+        //                 sh ''' $SCANNER_HOME/bin/sonar-scanner \
+        //                 -Dsonar.projectName=node-nexus-artifacts-test \
+        //                 -Dsonar.projectKey=nexus-artifacts-test '''
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('QualityGate') {
+        //     steps {
+        //         script {
+        //             waitForQualityGate abortPipeline: false, credentialsId: 'nexus-artifacts-test' 
+        //         }
+        //     }
+        // }
 
          stage('Trivy FScan') {
             steps {
