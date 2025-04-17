@@ -21,7 +21,7 @@ pipeline {
 
         stage('Sonarqube Analysis') {
             steps {
-                dir('src/') {
+                dir('terraform/') {
                     withSonarQubeEnv('sonar-server') {
                         sh ''' $SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectName=node-nexus-artifacts-test \
@@ -33,14 +33,16 @@ pipeline {
         stage('QualityGate') {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'nexus-artifacts-test' 
+                    dir('terraform/') {
+                        waitForQualityGate abortPipeline: false, credentialsId: 'nexus-artifacts-test' 
+                    }
                 }
             }
         }
 
          stage('Trivy FScan') {
             steps {
-                dir('src/') {
+                dir('terraform/') {
                     sh 'trivy fs . > /home/ubuntu/trivyfs.txt'
                 }
             }
@@ -48,19 +50,25 @@ pipeline {
         
         stage("terraform Init"){
         steps { 
-            sh 'terraform init'
+            dir('terraform/') {
+                sh 'terraform init'
+            }    
         }
       }
 
       stage("terraform plan"){
         steps {
-            sh 'terraform plan'
+            dir('terraform/') {
+                sh 'terraform plan'
+            }    
         }
       } 
 
       stage("terraform apply") { 
         steps { 
-            sh 'terraform apply --auto-approve'
+            dir('terraform/') {
+                sh 'terraform apply --auto-approve'
+            }
         }
       } 
     }
