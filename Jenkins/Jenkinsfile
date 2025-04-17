@@ -24,8 +24,8 @@ pipeline {
                 dir('terraform/') {
                     withSonarQubeEnv('sonar-server') {
                         sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=node-nexus-artifacts-test \
-                        -Dsonar.projectKey=nexus-artifacts-test '''
+                        -Dsonar.projectName=jenkins-cloudinfrabuild-automate-terraform \
+                        -Dsonar.projectKey=jenkins-cloudinfrabuild-automate-terraform '''
                     }
                 }
             }
@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     dir('terraform/') {
-                        waitForQualityGate abortPipeline: false, credentialsId: 'nexus-artifacts-test' 
+                        waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-cloudinfrabuild-automate-terraform' 
                     }
                 }
             }
