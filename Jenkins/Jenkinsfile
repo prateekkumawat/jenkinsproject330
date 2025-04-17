@@ -2,11 +2,7 @@ pipeline {
     agent {
         label "devops"
     }
-    tools {
-        maven 'mvn'
-    }
     environment {
-        NEXUS_URL = "18.60.89.137:8081"
         SCANNER_HOME=tool 'sonar-scanner'
     }
 
@@ -16,30 +12,31 @@ pipeline {
                 cleanWs()
             }
         }
+
         stage("Code Checkout"){
           steps{ 
-            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "artifacts"
+            git url:"https://github.com/prateekkumawat/jenkinsproject330.git", branch: "terraform"
           }
         }
 
-        // stage('Sonarqube Analysis') {
-        //     steps {
-        //         dir('src/') {
-        //             withSonarQubeEnv('sonar-server') {
-        //                 sh ''' $SCANNER_HOME/bin/sonar-scanner \
-        //                 -Dsonar.projectName=node-nexus-artifacts-test \
-        //                 -Dsonar.projectKey=nexus-artifacts-test '''
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('QualityGate') {
-        //     steps {
-        //         script {
-        //             waitForQualityGate abortPipeline: false, credentialsId: 'nexus-artifacts-test' 
-        //         }
-        //     }
-        // }
+        stage('Sonarqube Analysis') {
+            steps {
+                dir('src/') {
+                    withSonarQubeEnv('sonar-server') {
+                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=node-nexus-artifacts-test \
+                        -Dsonar.projectKey=nexus-artifacts-test '''
+                    }
+                }
+            }
+        }
+        stage('QualityGate') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'nexus-artifacts-test' 
+                }
+            }
+        }
 
          stage('Trivy FScan') {
             steps {
@@ -49,41 +46,22 @@ pipeline {
             }
         }
         
-        stage("Maven package build"){
-            steps {
-                sh 'mvn clean package'
-                sh 'mvn install -f pom.xml'
-            }
+        stage("terraform Init"){
+        steps { 
+            sh 'terraform init'
         }
-     
-       stage("Artifacts Upload"){
-            steps{
-                script { 
-                   // Trim version of jar from pom file
-                   def version = sh(
-                                   script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
-                                   returnStdout: true
-                                ).trim()
+      }
 
-                    nexusArtifactUploader(
-                        protocol: 'http',
-                        nexusVersion: 'nexus3',
-                        groupId: 'mavencommends',
-                        nexusUrl: NEXUS_URL,
-                        credentialsId: 'nexuscreds',
-                        version: '0.2.2-SNAPSHOT',
-                        repository: 'maven-snapshots',
-                        artifacts: [
-                            [artifactId: 'mavencommends',
-                            classifier: '',
-                            file: "target/mavencommends-${version}.jar",
-                            type: 'jar']
-                        ]    
-                    );
-                }        
-            }
+      stage("terraform plan"){
+        steps {
+            sh 'terraform plan'
         }
+      } 
 
-        
+      stage("terraform apply") { 
+        steps { 
+            sh 'terraform apply --auto-approve'
+        }
+      } 
     }
 }
